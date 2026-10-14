@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Checkout – Northwind Supply</title>
+<style>
+  body { margin: 0; font-family: Georgia, serif; background: #FBFAF7; color: #222; }
+  header { display: flex; align-items: center; gap: 24px; padding: 16px 40px; background: #fff; border-bottom: 1px solid #E7E3DA; }
+  header input { width: 320px; padding: 8px 12px; border: 1px solid #bbb; border-radius: 6px; }
+  nav { margin-left: auto; display: flex; gap: 16px; }
+  .hero { height: 80px; background: linear-gradient(90deg, #2F4A3A, #6E8B5E); }
+  .hero img { width: 100%; height: 80px; opacity: 0; }
+  main { display: grid; grid-template-columns: 480px 380px; gap: 60px; padding: 32px 40px; }
+  label, legend { display: block; font-weight: bold; margin-bottom: 6px; }
+  input[type=email], select { width: 100%; padding: 10px; border: 1px solid #bbb; border-radius: 6px; }
+  .field { margin-bottom: 18px; }
+  fieldset { border: 1px solid #ddd; border-radius: 6px; padding: 10px 14px; margin: 0 0 18px; }
+  .actions { display: flex; gap: 12px; align-items: center; }
+  .icon-btn { width: 44px; height: 44px; border-radius: 8px; border: 1px solid #999; background: #fff; }
+  .btn-primary { height: 44px; padding: 0 22px; border-radius: 8px; border: 0; background: #2F4A3A; color: #fff; font-weight: bold; }
+  .product img { width: 380px; height: 170px; background: #DCD6C8; display: block; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #E7E3DA; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<header>
+  <img class="logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='32'%3E%3Crect width='150' height='32' fill='%232F4A3A'/%3E%3C/svg%3E" alt="Northwind Supply">
+  <input type="search" placeholder="Search products…">
+  <nav>
+    <span id="help-label" hidden>Help center</span>
+    <a href="/help" aria-labelledby="help-label">Help</a>
+    <a href="/cart" title="Your cart"><svg width="20" height="20" aria-hidden="true"><circle cx="10" cy="10" r="8"/></svg></a>
+  </nav>
+</header>
+<div class="hero"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""></div>
+<main>
+  <form id="checkout" onsubmit="return false">
+    <div class="field">
+      <label for="email">Email address</label>
+      <input id="email" type="email" placeholder="you@example.com">
+    </div>
+    <div class="field">
+      <label>Country
+        <select><option>United States</option><option>Canada</option></select>
+      </label>
+    </div>
+    <fieldset id="shipping">
+      <legend>Shipping speed</legend>
+      <label><input type="radio" name="s" checked> Standard</label>
+      <label><input type="radio" name="s"> Express</label>
+    </fieldset>
+    <div class="field">
+      <input type="text" id="zip">
+    </div>
+    <div class="field">
+      <label><input type="checkbox" aria-describedby="terms-hint"> I agree to the terms</label>
+      <span id="terms-hint" class="sr-only">Required to place your order.</span>
+    </div>
+    <div class="actions">
+      <button type="button" class="icon-btn"><svg width="20" height="20"><path d="M2 10h16" stroke="#000"/></svg></button>
+      <button class="btn-primary" aria-label="Submit order" aria-describedby="ship-note" title="Complete your purchase">Place order</button>
+    </div>
+    <p id="ship-note">You won’t be charged until your order ships.</p>
+    <div role="dialog" aria-label="Coupon">
+      <button type="button" class="close" aria-label="Close dialog">×</button>
+    </div>
+  </form>
+  <aside>
+    <div class="product"><img src="IMG_4471.jpg"></div>
+    <p>Trail Pack 30L <a class="read-more" href="/p/trail-pack-30l">Read more</a></p>
+    <p>Camp Stove <a class="read-more" href="/p/camp-stove">Read more</a></p>
+    <p><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="DSC_0042.jpg" width="40" height="40"></p>
+    <table class="summary">
+      <caption>Order summary</caption>
+      <tr><th>Item</th><th>Qty</th><th>Price</th></tr>
+      <tr><td>Trail Pack 30L</td><td>1</td><td>$129.00</td></tr>
+    </table>
+    <p><a href="#" id="later">Click here</a></p>
+    <div role="button" tabindex="0" aria-labelledby="nope">?</div>
+  </aside>
+</main>
+<script>
+  setTimeout(() => {
+    const b = document.createElement('button');
+    b.textContent = 'Added later';
+    document.querySelector('aside').appendChild(b);
+  }, 2500);
+</script>
+</body>
+</html>

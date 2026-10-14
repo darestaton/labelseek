@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy · LabelSeek</title>
+<meta name="description" content="LabelSeek doesn't collect, store, sell or send your data. Everything happens in your browser.">
+<style>
+  :root {
+    --ink: #15171C;
+    --muted: #4B5160;
+    --line: #D5D9DF;
+    --teal: #026E6C;
+    --tint: #E6F4F2;
+    --bg: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink: #ECEEF1; --muted: #B7BCC6; --line: #3A404D; --teal: #5CC8BC; --tint: #133533; --bg: #15171C; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+  h1 { font-size: 36px; line-height: 1.15; margin: 0 0 8px; }
+  h2 { font-size: 22px; margin: 40px 0 8px; }
+  p, li { max-width: 65ch; }
+  ul { padding-left: 1.25em; }
+  li + li { margin-top: 6px; }
+  a { color: var(--teal); text-underline-offset: 3px; }
+  .date { color: var(--muted); margin: 0 0 28px; }
+  .summary { background: var(--tint); border-radius: 14px; padding: 18px 20px; margin: 0 0 8px; }
+  .summary p { margin: 0; font-weight: 600; }
+  dl { margin: 0; }
+  dt { font-weight: 700; margin-top: 14px; }
+  dt code { font-size: 15px; }
+  dd { margin: 4px 0 0; }
+  footer { border-top: 1px solid var(--line); margin-top: 48px; padding-top: 16px; color: var(--muted); font-size: 15px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>LabelSeek Privacy Policy</h1>
+  <p class="date">Effective October 14, 2026</p>
+
+  <div class="summary">
+    <p>LabelSeek doesn't collect, store, sell or send any of your data. Everything it does happens inside your browser, on your device.</p>
+  </div>
+
+  <h2>What LabelSeek reads</h2>
+  <p>LabelSeek is a Chrome extension that shows the accessible name of every form control, link, button, image and table on a web page. To do that, while the LabelSeek side panel is open and scanning, it reads the page in your active tab:</p>
+  <ul>
+    <li>The page's elements and the attributes that make up their accessible names and descriptions, such as labels, <code>aria-label</code>, <code>alt</code> text, <code>title</code> and placeholder text.</li>
+    <li>Short snippets of each element's HTML, so you can see the code behind a result.</li>
+    <li>The page's title and web address, which are shown at the top of the panel.</li>
+  </ul>
+  <p>LabelSeek reads nothing when the panel is closed or when scanning is paused. It never reads pages in tabs you aren't looking at.</p>
+
+  <h2>What it does with that information</h2>
+  <p>It uses the information only to show results in the side panel and to highlight elements on the page. All of it is processed on your device.</p>
+  <ul>
+    <li>Nothing is sent to us or to anyone else. LabelSeek has no servers and makes no network requests.</li>
+    <li>There are no analytics, tracking, cookies or ads.</li>
+    <li>Nothing is saved. Results only exist in the open panel. They're replaced when you scan another page and gone when you close the panel.</li>
+  </ul>
+
+  <h2>Things you choose to do</h2>
+  <p>Some features only run when you click them:</p>
+  <ul>
+    <li><strong>Copy</strong> (a page address, a single issue, or all issues) puts text on your clipboard.</li>
+    <li><strong>Export CSV</strong> saves a file to your computer.</li>
+  </ul>
+  <p>Copied text and exported files can include the page's title and address and snippets of its HTML. Once they're on your clipboard or computer, they're yours to manage. Please keep that in mind before sharing results from private or sign-in-only pages.</p>
+
+  <h2>Permissions and why LabelSeek needs them</h2>
+  <dl>
+    <dt>Side panel (<code>sidePanel</code>)</dt>
+    <dd>Shows LabelSeek in Chrome's side panel.</dd>
+    <dt>Read and change data on the sites you visit (<code>&lt;all_urls&gt;</code>, <code>scripting</code>)</dt>
+    <dd>Lets LabelSeek scan whichever page you open it on and draw highlights on that page. It only runs while the panel is open and scanning, and it doesn't change the page's content.</dd>
+    <dt>Write to the clipboard (<code>clipboardWrite</code>)</dt>
+    <dd>Lets the copy buttons work.</dd>
+  </dl>
+
+  <h2>Sharing and selling</h2>
+  <p>We don't sell, rent, share or transfer any user data to anyone, and we don't use it for advertising, credit decisions or any purpose other than LabelSeek's single purpose: showing you the accessible names on the page you're looking at. LabelSeek's use of information complies with the <a href="https://developer.chrome.com/docs/webstore/program-policies/limited-use">Chrome Web Store User Data Policy, including the Limited Use requirements</a>.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If LabelSeek ever handles data differently, we'll update this page and the effective date above before the change ships.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy? Email <a href="mailto:[CONTACT EMAIL]">[CONTACT EMAIL]</a>.</p>
+
+  <footer>LabelSeek is made by [YOUR NAME OR COMPANY].</footer>
+</main>
+</body>
+</html>
