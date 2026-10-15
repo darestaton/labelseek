@@ -393,6 +393,7 @@ import { computeAccessibleName, computeAccessibleDescription, getRole } from 'do
   function ensureHost() {
     if (host && host.isConnected) return;
     host = document.createElement('labelseek-overlay');
+    host.setAttribute('aria-hidden', 'true');
     host.style.cssText = 'all:initial;position:fixed;inset:0;pointer-events:none;z-index:2147483647;display:block;';
     shadow = host.attachShadow({ mode: 'closed' });
     const font = (w, f) => `@font-face{font-family:'LS DM Sans';font-weight:${w};src:url(${chrome.runtime.getURL('fonts/' + f)}) format('woff2');}`;
@@ -461,7 +462,9 @@ import { computeAccessibleName, computeAccessibleDescription, getRole } from 'do
       if (id == null || !byItem.has(id)) continue;
       const i = draws.findIndex((d) => d.it.id === id);
       if (i >= 0) draws.splice(i, 1);
-      draws.push({ it: byItem.get(id), mode });
+      // an element that already had a label keeps it while hovered, otherwise the label under the
+      // pointer vanishes, the pointer falls through to the page, the label returns, and it flickers
+      draws.push({ it: byItem.get(id), mode, keepTag: i >= 0 });
     }
     const vw = innerWidth, vh = innerHeight;
     let n = 0;
@@ -485,7 +488,7 @@ import { computeAccessibleName, computeAccessibleDescription, getRole } from 'do
       box.style.background = d.mode === 'peek' || d.mode === 'hover' ? 'rgba(2,110,108,0.06)' : 'transparent';
       box.dataset.id = d.it.id;
       const tag = box.firstChild;
-      const showTag = d.mode === 'all' || sel;
+      const showTag = d.mode === 'all' || sel || d.keepTag;
       tag.style.display = showTag ? 'block' : 'none';
       if (showTag) {
         const it = d.it;
@@ -505,10 +508,20 @@ import { computeAccessibleName, computeAccessibleDescription, getRole } from 'do
     drawCard();
   }
 
+  // The card waits a beat before appearing, so sweeping the pointer across the page never strobes it.
+  let cardFor = null, cardTimer = 0, cardDismissed = null;
+  const onEsc = (e) => { if (e.key === 'Escape' && view.hover != null && !card.hidden) { cardDismissed = view.hover; card.hidden = true; } };
   function drawCard() {
     const it = view.hover != null ? items.find((x) => x.id === view.hover) : null;
     const el = it && byId.get(it.id);
-    if (!it || !el || !el.isConnected) { card.hidden = true; return; }
+    if (!it || !el || !el.isConnected) { cardFor = null; cardDismissed = null; clearTimeout(cardTimer); cardTimer = 0; card.hidden = true; return; }
+    if (cardDismissed === it.id) { card.hidden = true; return; }
+    if (cardDismissed != null) cardDismissed = null;
+    if (cardFor !== it.id) {
+      card.hidden = true;
+      if (!cardTimer) cardTimer = setTimeout(() => { cardTimer = 0; if (view.hover != null) { cardFor = view.hover; render(); } }, 140);
+      return;
+    }
     const r = el.getBoundingClientRect();
     const k = kindOf(it);
     const nameColor = k === 'error' ? '#FF9B8F' : '#FFFFFF';
@@ -552,6 +565,8 @@ import { computeAccessibleName, computeAccessibleDescription, getRole } from 'do
   function pick(id) {
     if (id == null || !byId.has(id)) return;
     view.selected = id;
+    view.hover = null;
+    send({ t: 'hover', id: null });
     send({ t: 'pick', id });
     render();
   }
@@ -598,6 +613,7 @@ import { computeAccessibleName, computeAccessibleDescription, getRole } from 'do
     document.addEventListener('mouseout', onOut, true);
     for (const t of ['click', 'mousedown', 'pointerdown', 'mouseup', 'pointerup', 'auxclick', 'dblclick', 'submit']) addEventListener(t, swallow, true);
     addEventListener('scroll', onScroll, { capture: true, passive: true });
+    addEventListener('keydown', onEsc, true);
     addEventListener('resize', onScroll, { passive: true });
     mo = new MutationObserver(onMutations);
     mo.observe(document.documentElement, {
@@ -611,10 +627,12 @@ import { computeAccessibleName, computeAccessibleDescription, getRole } from 'do
     document.removeEventListener('mouseout', onOut, true);
     for (const t of ['click', 'mousedown', 'pointerdown', 'mouseup', 'pointerup', 'auxclick', 'dblclick', 'submit']) removeEventListener(t, swallow, true);
     removeEventListener('scroll', onScroll, { capture: true });
+    removeEventListener('keydown', onEsc, true);
     removeEventListener('resize', onScroll);
     if (mo) mo.disconnect();
     mo = null;
     clearTimeout(moTimer);
+    clearTimeout(cardTimer); cardTimer = 0; cardFor = null;
     Object.assign(view, { selected: null, peek: null, hover: null, master: false, shown: null });
     setInspectCursor(false);
     if (host) host.remove();

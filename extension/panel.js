@@ -119,8 +119,39 @@ function renderHeader() {
   });
 
   $('exportCsv').disabled = !ready || !S.items.length;
-  const ca = $('copyAll');
-  ca.setAttribute('aria-disabled', !ready || !c.issues ? 'true' : 'false');
+  $('moreBtn').disabled = !ready || !S.items.length;
+  updateCopyMenu();
+}
+
+function updateCopyMenu() {
+  const ready = S.status === 'ready';
+  const all = ready ? S.items.filter((i) => i.sev).length : 0;
+  const fil = ready ? visibleItems().length : 0;
+  const parts = filterSummary();
+  const set = (id, n, sub) => {
+    $(id).setAttribute('aria-disabled', n ? 'false' : 'true');
+    $(id + 'N').textContent = ready ? n : '';
+    $(id + 'Sub').textContent = sub;
+  };
+  set('copyAll', all, all ? 'Every warning and missing name' : 'No issues found on this page');
+  set('copyFiltered', fil, fil ? (parts.length ? parts.join(' · ') : 'Everything the list shows now') : 'Nothing in this view');
+}
+
+// Scroll the list so the opened row's header sits at the top, every time.
+// (scrollIntoView 'nearest' does nothing useful for a tall, partly visible row, which left people mid-description.)
+function revealRow(id) {
+  const row = document.querySelector(`[data-row="${id}"]`);
+  const li = row && row.parentElement;
+  if (!li) return;
+  const list = $('list');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const target = () => Math.max(0, list.scrollTop + li.getBoundingClientRect().top - list.getBoundingClientRect().top - 4);
+  list.scrollTo({ top: target(), behavior: calm ? 'auto' : 'smooth' });
+  // a re-render or late layout can interrupt a smooth scroll, so check where we landed and snap if needed
+  setTimeout(() => {
+    const l = document.querySelector(`[data-row="${id}"]`);
+    if (l && S.openId === id && Math.abs(l.parentElement.getBoundingClientRect().top - list.getBoundingClientRect().top - 4) > 3) list.scrollTo({ top: target(), behavior: 'auto' });
+  }, calm ? 60 : 420);
 }
 
 function keepFocus(fn) {
@@ -219,7 +250,17 @@ function detailHtml(it, k) {
     '</div>';
 }
 
-function render() { renderHeader(); renderList(); }
+let lastLive = '';
+function announceCount() {
+  if (S.status !== 'ready') return;
+  const n = visibleItems().length;
+  const msg = n === 0 ? 'No elements shown' : n + (n === 1 ? ' element shown' : ' elements shown');
+  if (msg === lastLive) return;
+  lastLive = msg;
+  clearTimeout(announceCount.t);
+  announceCount.t = setTimeout(() => { $('liveCount').textContent = msg; }, 400);
+}
+function render() { renderHeader(); renderList(); announceCount(); }
 
 // ---------- toast ----------
 let toastTimer = 0;
@@ -273,10 +314,30 @@ function ticket(it) {
   return lines.join('\n');
 }
 
-function allTickets() {
-  const issues = S.items.filter((i) => i.sev).sort((a, b) => (a.sev === b.sev ? 0 : a.sev === 'error' ? -1 : 1));
-  const head = '# Accessibility issues: ' + (cleanTitle() || pageName()) + '\n\n' + S.url + '\n\n' + issues.length + ' issue' + (issues.length === 1 ? '' : 's') + ' found with LabelSeek.';
+function ticketsFor(list, scope) {
+  const issues = list.filter((i) => i.sev).sort((a, b) => (a.sev === b.sev ? 0 : a.sev === 'error' ? -1 : 1));
+  const head = '# Accessibility issues: ' + (cleanTitle() || pageName()) + '\n\n' + S.url + '\n\n' + issues.length + ' issue' + (issues.length === 1 ? '' : 's') + (scope ? ' ' + scope : ' found') + ' with LabelSeek.';
   return { text: head + '\n\n' + issues.map(ticket).join('\n\n---\n\n') + '\n', n: issues.length };
+}
+const allTickets = () => ticketsFor(S.items);
+// what the list is narrowed to right now, in words
+function filterSummary() {
+  const parts = [];
+  if (S.sev) parts.push({ good: 'Good', warn: 'Warnings', error: 'No name' }[S.sev]);
+  if (S.filter !== 'all') { const c = CATS.find(([id]) => id === S.filter); if (c) parts.push(c[2]); }
+  if (S.query.trim()) parts.push('“' + S.query.trim() + '”');
+  return parts;
+}
+// Everything the list shows right now, good elements included. With no filter on, that is the whole list.
+function filteredTickets() {
+  const rank = (i) => (i.sev === 'error' ? 0 : i.sev === 'warn' ? 1 : 2);
+  const list = visibleItems().map((it, k) => [it, k]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map((x) => x[0]);
+  const parts = filterSummary();
+  const issues = list.filter((i) => i.sev).length;
+  const head = '# Accessibility review: ' + (cleanTitle() || pageName()) + '\n\n' + S.url + '\n\n' +
+    list.length + ' element' + (list.length === 1 ? '' : 's') + (parts.length ? ' in the filtered view (' + parts.join(', ') + ')' : ' on the page') +
+    ', ' + (issues ? issues + ' with issues' : 'none with issues') + '. Copied with LabelSeek.';
+  return { text: head + '\n\n' + list.map(ticket).join('\n\n---\n\n') + '\n', n: list.length };
 }
 
 function csv() {
@@ -457,8 +518,7 @@ function onPageMessage(m, p) {
     delete S.collapsed[it.cat];
     render();
     syncOverlay();
-    const row = document.querySelector(`[data-row="${it.id}"]`);
-    if (row) row.parentElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    revealRow(it.id);
   }
 }
 
@@ -485,10 +545,7 @@ $('list').addEventListener('click', async (e) => {
     S.openId = S.openId === id ? null : id;
     renderList();
     post({ t: 'select', id: S.openId, scroll: true });
-    if (S.openId != null) {
-      const row = document.querySelector(`[data-row="${id}"]`);
-      if (row) row.parentElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
+    if (S.openId != null) revealRow(id);
     return;
   }
   const c = e.target.closest('[data-copy]');
@@ -577,11 +634,11 @@ $('pageBtn').addEventListener('click', async () => {
   toast('Page URL copied');
 });
 
-async function copyAllIssues() {
-  const { text, n } = allTickets();
+async function copyIssues(which) {
+  const { text, n } = which === 'filtered' ? filteredTickets() : allTickets();
   if (!n) return;
   await copyText(text);
-  toast('Copied ' + n + ' issue' + (n === 1 ? '' : 's') + ' as Markdown tickets');
+  toast(which === 'filtered' ? 'Copied ' + n + ' element' + (n === 1 ? '' : 's') + ' from the filtered view' : 'Copied ' + n + ' issue' + (n === 1 ? '' : 's') + ' as Markdown tickets');
 }
 
 $('exportCsv').addEventListener('click', () => {
@@ -593,45 +650,61 @@ $('exportCsv').addEventListener('click', () => {
   toast('Exported ' + S.items.length + ' elements to CSV');
 });
 
-// menu
+// menus (the header menu and the copy menu share the same behaviour)
+function setupMenu(btn, menu, { onOpen, opensUp } = {}) {
+  const items = () => [...menu.querySelectorAll('[role^=menuitem]')];
+  const api = {
+    open(focusIdx = 0) {
+      if (btn.disabled) return;
+      if (onOpen) onOpen();
+      menu.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      items()[focusIdx].focus();
+    },
+    close(refocus = true) {
+      if (menu.hidden) return;
+      menu.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      if (refocus) btn.focus();
+    }
+  };
+  btn.addEventListener('click', () => (menu.hidden ? api.open() : api.close()));
+  btn.addEventListener('keydown', (e) => {
+    const first = opensUp ? 'ArrowUp' : 'ArrowDown', last = opensUp ? 'ArrowDown' : 'ArrowUp';
+    if (e.key === first) { e.preventDefault(); api.open(0); }
+    if (e.key === last) { e.preventDefault(); api.open(items().length - 1); }
+  });
+  menu.addEventListener('keydown', (e) => {
+    const list = items();
+    const i = list.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); list[(i + 1) % list.length].focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); list[(i - 1 + list.length) % list.length].focus(); }
+    else if (e.key === 'Home') { e.preventDefault(); list[0].focus(); }
+    else if (e.key === 'End') { e.preventDefault(); list[list.length - 1].focus(); }
+    else if (e.key === 'Escape') { e.preventDefault(); api.close(); }
+    else if (e.key === 'Tab') api.close(false);
+  });
+  document.addEventListener('mousedown', (e) => {
+    if (!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)) api.close(false);
+  });
+  return api;
+}
 const menuBtn = $('menuBtn');
 const menu = $('menu');
-const menuItems = () => [...menu.querySelectorAll('[role^=menuitem]')];
-function openMenu(focusIdx = 0) {
-  menu.hidden = false;
-  menuBtn.setAttribute('aria-expanded', 'true');
-  menuItems()[focusIdx].focus();
-}
-function closeMenu(refocus = true) {
-  if (menu.hidden) return;
-  menu.hidden = true;
-  menuBtn.setAttribute('aria-expanded', 'false');
-  if (refocus) menuBtn.focus();
-}
-menuBtn.addEventListener('click', () => (menu.hidden ? openMenu() : closeMenu()));
-menuBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown') { e.preventDefault(); openMenu(0); }
-  if (e.key === 'ArrowUp') { e.preventDefault(); openMenu(menuItems().length - 1); }
-});
-menu.addEventListener('keydown', (e) => {
-  const items = menuItems();
-  const i = items.indexOf(document.activeElement);
-  if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); }
-  else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
-  else if (e.key === 'Home') { e.preventDefault(); items[0].focus(); }
-  else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
-  else if (e.key === 'Escape') { e.preventDefault(); closeMenu(); }
-  else if (e.key === 'Tab') closeMenu(false);
-});
-document.addEventListener('mousedown', (e) => {
-  if (!menu.hidden && !menu.contains(e.target) && !menuBtn.contains(e.target)) closeMenu(false);
+const mainMenu = setupMenu(menuBtn, menu);
+const closeMenu = mainMenu.close;
+const moreMenu = setupMenu($('moreBtn'), $('moreMenu'), { onOpen: updateCopyMenu, opensUp: true });
+$('moreMenu').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-more]');
+  if (!b || b.getAttribute('aria-disabled') === 'true') return;
+  moreMenu.close();
+  copyIssues(b.dataset.more);
 });
 menu.addEventListener('click', async (e) => {
   const b = e.target.closest('[data-menu]');
   if (!b) return;
   if (b.getAttribute('aria-disabled') === 'true') return;
   closeMenu();
-  if (b.dataset.menu === 'copyAll') { copyAllIssues(); return; }
   if (b.dataset.menu === 'refresh') {
     if (S.paused) { setPaused(false); return; }
     pendingRefreshToast = true;

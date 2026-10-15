@@ -228,8 +228,38 @@ pre.code { margin: 0; padding: 12px 14px; background: var(--ink); color: #E8EAEE
 .banner-inner { overflow: hidden; min-height: 0; }
 .banner { margin: 14px 16px 6px; padding: 14px; border-radius: 14px; background: var(--info-bg); display: flex; flex-direction: column; gap: 12px; }
 .banner-text { display: flex; flex-direction: column; gap: 4px; }
-.banner-title { font-size: 16px; font-weight: 800; color: var(--info); }
+.banner-title { font-size: 16px; font-weight: 800; color: var(--ink); }
 .banner-body { font-size: 14px; line-height: 1.45; }
 .banner .btn { width: 100%; }
 .list { transition: opacity .25s ease; }
-.app.paused .list { opacity: .5; }
+.app.paused .list { filter: grayscale(1); }
+
+/* split button: Export CSV plus a menu of copy options */
+.foot { gap: 0; }
+.split { position: relative; flex: 1; display: flex; }
+.split .primary { border-radius: 14px 0 0 14px; }
+.btn.more { flex: 0 0 52px; padding: 0; border: 0; border-radius: 0 14px 14px 0; background: var(--accent-hover); color: #FFFFFF; }
+.btn.more:hover, .btn.more[aria-expanded="true"] { background: #01403E; }
+.btn.more:disabled { background: #F3F4F7; color: #5C6270; }
+.btn.more svg { transition: transform .18s ease; }
+.btn.more[aria-expanded="true"] svg { transform: rotate(180deg); }
+.btn.more:focus-visible, .split .primary:focus-visible { outline-offset: 2px; position: relative; z-index: 1; }
+.menu.up { top: auto; bottom: calc(100% + 8px); left: 0; right: 0; width: auto; transform-origin: bottom right; animation: menuUp .16s cubic-bezier(.2,.8,.2,1); }
+@keyframes menuUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.menu.up .mi-text { flex: 1; min-width: 0; }
+.menu.up .mi-sub { overflow-wrap: anywhere; }
+.mi-count { flex: 0 0 auto; align-self: center; min-width: 28px; padding: 2px 8px; border-radius: 999px; background: #F3F4F7; border: 1px solid var(--line); font-size: 14px; font-weight: 700; text-align: center; color: var(--ink); }
+.mi[aria-disabled="true"] .mi-count { color: #5C6270; background: #FFFFFF; }
+
+/* the copy menu opens over the toast, never under it */
+.foot { z-index: 4; }
+
+/* Windows High Contrast / forced colors: state must not rely on our colors */
+@media (forced-colors: active) {
+  .pill[aria-pressed="true"] { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
+  .pill[aria-pressed="true"] .count { color: HighlightText; }
+  .tile[aria-pressed="true"] { border-width: 4px; padding: 7px 9px; }
+  .btn, .btn.more { border: 1px solid ButtonText; }
+  .btn.more { border-left-width: 0; }
+  .app.paused .list { filter: none; }
+}

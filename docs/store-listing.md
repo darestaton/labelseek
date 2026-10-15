@@ -31,7 +31,7 @@ WHAT YOU GET
 • Outlines and name tags on the page. Hover for a quick card, click a tag to jump to its row. Show or hide whole categories with the eye buttons
 • Search and category pills to find what you need fast
 • Pause scanning any time to use the page normally
-• Copy a single issue as a ticket, copy all issues at once, or export everything to a CSV sorted into Good, Warnings and No name
+• Copy a single issue as a ticket, copy all issues at once, or copy whatever you've filtered down to. Export everything to a CSV sorted into Good, Warnings and No name
 
 BUILT FOR
 Designers checking a build, developers fixing markup, QA testing a release, and anyone learning how accessible names work. You don't need to be an accessibility expert to read the results.
@@ -53,13 +53,13 @@ LabelSeek is a helpful starting point, not a full audit. Automated checks can't 
 ## Images
 
 - Promo tile (small): promo-tile-440x280.png
-- Screenshots (1280x800, up to 5 allowed, you have 6 to choose from). Suggested order:
+- Screenshots (1280x800, up to 5 allowed, you have 7 to choose from). Suggested order:
   1. screenshot-1-overview.png
   2. screenshot-3-hover.png
   3. screenshot-4-warnings.png
-  4. screenshot-5-noname.png
+  4. screenshot-7-copy-menu.png
   5. screenshot-6-paused.png
-  (screenshot-2-selected.png is a spare)
+  (screenshot-2-selected.png and screenshot-5-noname.png are spares)
 - Store icon (128x128): extension/icons/icon-128.png
 
 ## Privacy practices tab
@@ -93,7 +93,7 @@ LabelSeek's whole interface lives in Chrome's side panel so it can sit next to t
 
 **clipboardWrite**
 
-Used only when the user clicks a copy button, to copy a page address, a single issue, or all issues as text.
+Used only when the user clicks a copy button, to copy a page address, a single issue, all issues, or the filtered view as text.
 
 ### Remote code
 
@@ -116,5 +116,5 @@ The public address where you host privacy.html, for example https://YOUR-GITHUB-
 
 1. Fill in [CONTACT EMAIL] and [YOUR NAME OR COMPANY] in privacy.html.
 2. Host privacy.html at a public address and paste it above.
-3. Upload the extension zip (labelseek-extension-v0.5.zip), not the source zip.
+3. Upload the extension zip (labelseek-extension-v1.0.zip), not the source zip.
 4. Add a support email or site on the Account tab if the dashboard asks for one.
