@@ -42,7 +42,3 @@ Run Playwright scripts from `build/` so ESM resolution works. Load the extension
 2. Rebuild `content.js` and run the tests.
 3. Zip the contents of `extension/` (not the folder itself, and not `test/`, `src/` or `build/`).
 4. Upload under Package in the Web Store developer dashboard and submit for review. The extension requests `<all_urls>`, so reviews take longer; do not change permissions without a reason.
-
-## Design reference
-
-Design explorations live in a Claude canvas artifact: https://claude.ai/artifact/QcRvXJ76PC4tQdp4RrwnUR (the v4 boards are the current panel: scanning, paused, and copy menu). Read it with the Artifact tool when asked to match the design. If it can't be opened, ask Dare for a screenshot.
