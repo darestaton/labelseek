@@ -171,9 +171,9 @@ pre.code { margin: 0; padding: 12px 14px; background: var(--ink); color: #E8EAEE
 
 .btn { min-height: 48px; border-radius: 14px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn.secondary { flex: 0 0 auto; padding: 0 18px; border: 1px solid var(--control); background: #FFFFFF; font-weight: 700; }
-.btn.secondary:hover { background: #F3F4F7; }
+.btn.secondary:hover:not(:disabled) { background: #F3F4F7; }
 .btn.primary { flex: 1; border: 0; background: var(--accent); color: #FFFFFF; font-weight: 800; }
-.btn.primary:hover { background: var(--accent-hover); }
+.btn.primary:hover:not(:disabled) { background: var(--accent-hover); }
 .btn:disabled { cursor: not-allowed; background: #F3F4F7; color: #5C6270; border-color: #C9CED6; }
 .btn.small { min-height: 44px; border-radius: 12px; }
 
@@ -239,8 +239,9 @@ pre.code { margin: 0; padding: 12px 14px; background: var(--ink); color: #E8EAEE
 .split { position: relative; flex: 1; display: flex; }
 .split .primary { border-radius: 14px 0 0 14px; }
 .btn.more { flex: 0 0 52px; padding: 0; border: 0; border-radius: 0 14px 14px 0; background: var(--accent-hover); color: #FFFFFF; }
-.btn.more:hover, .btn.more[aria-expanded="true"] { background: #01403E; }
+.btn.more:hover:not(:disabled), .btn.more[aria-expanded="true"] { background: #01403E; }
 .btn.more:disabled { background: #F3F4F7; color: #5C6270; }
+.btn.primary:disabled, .btn.secondary:disabled { background: #F3F4F7; color: #5C6270; }
 .btn.more svg { transition: transform .18s ease; }
 .btn.more[aria-expanded="true"] svg { transform: rotate(180deg); }
 .btn.more:focus-visible, .split .primary:focus-visible { outline-offset: 2px; position: relative; z-index: 1; }

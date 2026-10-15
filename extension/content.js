@@ -1412,13 +1412,22 @@
           tag.style.background = L.tagBg;
           tag.style.color = L.tagFg;
           tag.style.borderColor = L.tagBorder;
+          const M = 4, bw = sel ? 3 : 2;
+          const cw = document.documentElement.clientWidth || vw, ch = document.documentElement.clientHeight || vh;
+          const boxL = r.left - pad, boxT = r.top - pad, boxH = h + pad * 2;
+          tag.style.maxWidth = Math.max(80, Math.min(360, cw - M * 2)) + "px";
+          tag.style.right = "auto";
+          tag.style.bottom = "auto";
+          const tw = tag.offsetWidth, th = tag.offsetHeight;
           const big = h > vh * 0.6;
-          const below = !big && r.top < 26;
-          tag.style.top = big ? "4px" : below ? "calc(100% + 4px)" : "auto";
-          tag.style.bottom = big || below ? "auto" : "calc(100% + 4px)";
-          const nearRight = r.left > vw - 240;
-          tag.style.left = big ? "4px" : nearRight ? "auto" : "-2px";
-          tag.style.right = nearRight && !big ? "-2px" : "auto";
+          let vy;
+          if (big) vy = Math.max(boxT + 4, M);
+          else if (boxT - 4 - th >= M) vy = boxT - 4 - th;
+          else if (boxT + boxH + 4 + th <= ch - M) vy = boxT + boxH + 4;
+          else vy = Math.min(Math.max(boxT + 4, M), ch - th - M);
+          const vx = Math.min(Math.max(boxL - 2, M), Math.max(M, cw - tw - M));
+          tag.style.left = vx - boxL - bw + "px";
+          tag.style.top = vy - boxT - bw + "px";
           tag.style.fontWeight = sel ? "700" : "500";
         }
       }
