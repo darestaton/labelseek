@@ -4,6 +4,7 @@ Free, open-source Chrome (MV3) side-panel extension that shows the accessible na
 
 ## Working with Dare
 
+- LabelSeek is MIT licensed (see `LICENSE`), so calling it open source is accurate. If you add or update a bundled dependency or font, update `THIRD-PARTY-NOTICES.md` too, and ship it inside the extension zip at the next release.
 - No em dashes in anything written. Casual, direct tone. Give a recommendation, not a menu of options.
 - Dare is an accessibility expert. Do not get WCAG details wrong, and cite criteria accurately.
 - LabelSeek must itself meet WCAG 2.2 AA: text contrast 4.5:1, non-text 3:1, 24px minimum targets (aim for 44px), visible focus, keyboard operable, forced-colors support, reduced-motion support, no flashing. Check this on every UI change.

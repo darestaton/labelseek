@@ -40,3 +40,7 @@ NODE_PATH=$PWD/node_modules npx esbuild ../src/content.src.js --bundle --format=
 ## Privacy
 
 LabelSeek collects nothing and everything stays in your browser. Read the [privacy policy](docs/privacy.html) (published at https://darestaton.github.io/labelseek/privacy.html once Pages is on).
+
+## License
+
+LabelSeek is open source under the [MIT License](LICENSE). Third-party software it bundles is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
