@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "LabelSeek",
   "short_name": "LabelSeek",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "See the accessible name of every element on a page, where it came from, and what to fix.",
   "minimum_chrome_version": "116",
   "icons": {
