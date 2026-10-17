@@ -39,6 +39,8 @@ Run Playwright scripts from `build/` so ESM resolution works. Load the extension
 
 ## Releasing to the Chrome Web Store
 
+Live listing: https://chromewebstore.google.com/detail/pnlehnhkjodkhfkianhckhamomjhhgne
+
 1. Bump `version` in `extension/manifest.json`.
 2. Rebuild `content.js` and run the tests.
 3. Zip the contents of `extension/` (not the folder itself, and not `test/`, `src/` or `build/`).

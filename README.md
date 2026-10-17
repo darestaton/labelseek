@@ -4,6 +4,8 @@
 
 A Chrome side panel that shows the accessible name of every control, link, image and table on a page, where the name came from, and what to fix.
 
+**[Install LabelSeek from the Chrome Web Store](https://chromewebstore.google.com/detail/pnlehnhkjodkhfkianhckhamomjhhgne)**
+
 ## Folders
 
 - `extension/` is the extension Chrome loads. Everything in it ships as is, except `content.js`, which is built.
@@ -36,6 +38,9 @@ NODE_PATH=$PWD/node_modules npx esbuild ../src/content.src.js --bundle --format=
 - Open shadow roots are scanned. Closed ones can't be.
 - Names show on the page by default, and while they do the page is in inspect mode: clicks pick elements (or their tags) and never follow links or press buttons. Press pause in the panel to stop scanning and use the page normally.
 - The panel UI is light mode only.
+- LabelSeek checks accessible names only. It doesn't test color contrast, headings, landmarks or other parts of WCAG, so a clean scan isn't a full audit.
+- A few controls, like the filter pills, are 40px tall. That passes WCAG 2.2 AA (24px minimum) but is under the 44px we aim for.
+- Tested with axe-core, keyboard navigation, VoiceOver and other assistive technology on Apple and Windows. Reports of anything that behaves differently are welcome.
 
 ## Privacy
 
