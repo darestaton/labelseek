@@ -1,6 +1,6 @@
 # LabelSeek
 
-![LabelSeek](docs/img/labelseek-wordmark-full.png)
+![LabelSeek](docs/img/labelseek-wordmark-light.png)
 
 A Chrome side panel that shows the accessible name of every control, link, image and table on a page, where the name came from, and what to fix.
 
