@@ -1,9 +1,10 @@
 # LabelSeek
 
-Free, open-source Chrome (MV3) side-panel extension that shows the accessible name of every control, link, image and table on a page, where the name came from, and WCAG-referenced issues. Built by Darrien Staton (Dare), a senior product designer and CPACC-certified accessibility advocate. Repo: darestaton/labelseek (all lowercase). Privacy policy: https://darestaton.github.io/labelseek/privacy.html (served from `docs/` via GitHub Pages; the URL is case-sensitive).
+Free, source-available Chrome (MV3) side-panel extension that shows the accessible name of every control, link, image and table on a page, where the name came from, and WCAG-referenced issues. Built by Darrien Staton (Dare), a senior product designer and CPACC-certified accessibility advocate. Repo: darestaton/labelseek (all lowercase). Privacy policy: https://darestaton.github.io/labelseek/privacy.html (served from `docs/` via GitHub Pages; the URL is case-sensitive).
 
 ## Working with Dare
 
+- LabelSeek is source-available, not open source: the repo is public but has no license file. Never call it "open source" in any copy, listing or post unless a license has been added first.
 - No em dashes in anything written. Casual, direct tone. Give a recommendation, not a menu of options.
 - Dare is an accessibility expert. Do not get WCAG details wrong, and cite criteria accurately.
 - LabelSeek must itself meet WCAG 2.2 AA: text contrast 4.5:1, non-text 3:1, 24px minimum targets (aim for 44px), visible focus, keyboard operable, forced-colors support, reduced-motion support, no flashing. Check this on every UI change.
