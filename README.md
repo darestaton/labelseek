@@ -40,7 +40,7 @@ NODE_PATH=$PWD/node_modules npx esbuild ../src/content.src.js --bundle --format=
 - The panel UI is light mode only.
 - LabelSeek checks accessible names only. It doesn't test color contrast, headings, landmarks or other parts of WCAG, so a clean scan isn't a full audit.
 - A few controls, like the filter pills, are 40px tall. That passes WCAG 2.2 AA (24px minimum) but is under the 44px we aim for.
-- Tested with axe-core and keyboard navigation so far. Screen reader testing is still to come, and reports are welcome.
+- Tested with axe-core, keyboard navigation, VoiceOver and other assistive technology on Apple and Windows. Reports of anything that behaves differently are welcome.
 
 ## Privacy
 
